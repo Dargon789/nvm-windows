@@ -3,8 +3,9 @@ name: Autotag
 on:
   push:
     branches:
-      - main
       - master
+      - main
+      - dev
 
 jobs:
   autotag:
