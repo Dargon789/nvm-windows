@@ -395,8 +395,14 @@ jobs:
             echo "HEAD: $(git rev-parse HEAD)"
             exit 1
           fi
+          # Sanitize and validate COMMIT_SHA before exporting to GITHUB_ENV
+          COMMIT_SHA=$(printf '%s' "$COMMIT_SHA" | tr -d '\r\n')
+          if ! printf '%s\n' "$COMMIT_SHA" | grep -Eq '^[0-9a-fA-F]{40}$'; then
+            echo "Error: Retrieved commit SHA is not a valid 40-character hex string"
+            exit 1
+          fi
           echo "Commit SHA: $COMMIT_SHA"
-          echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_ENV
+          echo "COMMIT_SHA=$COMMIT_SHA" >> "$GITHUB_ENV"
         else
           echo "Error: GITHUB_EVENT_PATH not found"
           exit 1
